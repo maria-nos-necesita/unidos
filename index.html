@@ -48,16 +48,15 @@
             border-radius: 5px;
             cursor: pointer;
             margin-top: 20px;
-            transition: background-color 0.3s ease; /* Transición suave para el color */
+            transition: background-color 0.3s ease;
         }
 
         .btn:hover {
-            background-color: #004d99; /* Color al pasar el ratón por encima */
+            background-color: #004d99;
         }
 
-        /* Cambiar el color del botón a rojo cuando está activo (presionado) */
         .btn:active {
-            background-color: #e60000;  /* Fondo rojo */
+            background-color: #e60000;
         }
 
         .numbers {
@@ -79,16 +78,14 @@
             cursor: pointer;
         }
 
-        /* Cambiar el color del texto a fucsia cuando un número está comprado */
         .number.purchased {
-            background-color: #ff00ff;  /* Fucsia */
-            color: white;               /* Texto blanco */
+            background-color: #ff00ff;
+            color: white;
         }
 
-        /* Cambiar el color del texto a rojo cuando un número está seleccionado */
         .number.selected {
-            background-color: #0ed937c9;  /* Fondo verde */
-            color: white;               /* Texto blanco */
+            background-color: #0ed937c9;
+            color: white;
         }
 
     </style>
@@ -98,28 +95,22 @@
     <center><img src="merce.jpeg" alt="" width="100%" height=""></center>
 
     <h1>Rifa Lotería Caribeña - Noche del 15 de Febrero</h1>
-     <h3>Valor de la boleta $10.000 pesos<br>contamos con tu ayuda</h3>
+    <h3>Valor de la boleta $10.000 pesos<br>contamos con tu ayuda</h3>
+
     <!-- Sección 1: Selección de Números -->
     <div class="section">
         <h2>Selecciona tus Números de la Rifa</h2>
-        <br>
-        <br>
-         <h5>Los numero de color fucsia ya fueron comprados.</h5>
+        <br><br>
+        <h5>Los números de color fucsia ya fueron comprados.</h5>
         <div class="numbers" id="number-selection">
             <!-- Aquí se generarán los números del 00 al 99 -->
         </div>
-        <button class="btn" id="select-button">Confirmar tu Compra whatsapp</button>
+
+        <!-- Botón con enlace a WhatsApp -->
+        <button class="btn" id="select-button">Confirmar tu Compra WhatsApp</button>
     </div>
 
-
-     <h2>Premio 8 six pack de Cervesas.</h2>
-    <!-- Sección 2: Resultados de la Rifa -->
-
-
-
-
-       
-    </div>
+    <h2>Premio 8 six pack de Cervezas.</h2>
 
     <script>
         // Función para generar los números del 00 al 99
@@ -128,12 +119,11 @@
             for (let i = 0; i < 100; i++) {
                 const numberDiv = document.createElement("div");
                 numberDiv.classList.add("number");
-                numberDiv.textContent = i < 10 ? '0' + i : i; // Formato 00-99
+                numberDiv.textContent = i < 10 ? '0' + i : i;
                 numberDiv.setAttribute("data-number", i);
 
-                // Al hacer clic en un número, lo marca como seleccionado
                 numberDiv.addEventListener("click", function() {
-                    if (!this.classList.contains("purchased")) {  // No permitir marcar los comprados
+                    if (!this.classList.contains("purchased")) {  
                         this.classList.toggle("selected");
                     }
                 });
@@ -142,44 +132,49 @@
             }
         }
 
-        // Función para marcar los números comprados manualmente (en color fucsia)
+        // Marcar números comprados
         function markPurchasedNumbers(purchasedNumbers) {
             const allNumbers = document.querySelectorAll(".number");
             allNumbers.forEach(function(numberDiv) {
                 const numberValue = parseInt(numberDiv.textContent);
                 if (purchasedNumbers.includes(numberValue)) {
-                    numberDiv.classList.add("purchased");  // Marcar en fucsia
+                    numberDiv.classList.add("purchased");
                 }
             });
         }
 
-        // Función para seleccionar un número aleatorio de la rifa
-        function selectRandomNumber() {
+        // Función para mostrar alerta de los números seleccionados
+        function confirmCompra() {
             const selectedNumbers = document.querySelectorAll(".number.selected");
             if (selectedNumbers.length === 0) {
-                alert("Por favor, selecciona al menos un número para participar.");
+                alert("Por favor, selecciona al menos un número para confirmar tu compra.");
                 return;
             }
 
-            const randomIndex = Math.floor(Math.random() * selectedNumbers.length);
-            const randomNumber = selectedNumbers[randomIndex].textContent;
+            let numerosSeleccionados = [];
+            selectedNumbers.forEach(function(numberDiv) {
+                numerosSeleccionados.push(numberDiv.textContent);
+            });
 
-            // Muestra el número ganador
-            document.getElementById("rifa-result").textContent = `¡El número ganador es: ${randomNumber}!`;
+            let mensaje = "Has seleccionado los siguientes números: " + numerosSeleccionados.join(", ") + ".\n¿te pediremos estos numero para finalizar tu compra via Whatsapp gracias por tu ayuda feliz dia.";
 
-            // Muestra la sección de resultados
-            document.getElementById("result-section").style.display = "block";
+            // Mostrar la alerta de confirmación
+            let confirmar = confirm(mensaje);
+
+            if (confirmar) {
+                // Redirige al enlace de WhatsApp si confirma la compra
+                let whatsappLink = "https://wa.me/+1234567890?text=Quiero%20confirmar%20mi%20compra%20en%20la%20rifa%20Lotería%20Caribeña.%20Números%20seleccionados:%20" + numerosSeleccionados.join(", ");
+                window.open(whatsappLink, "_blank");
+            }
         }
 
-        // Inicializa la rifa generando los números
         generateNumbers();
 
-        // Marcar números comprados manualmente
-        const purchasedNumbers = [00, 08];  // Estos son los números comprados (puedes cambiar estos números)
+        const purchasedNumbers = [00, 08];
         markPurchasedNumbers(purchasedNumbers);
 
-        // Agregar el evento al botón de seleccionar número aleatorio
-        document.getElementById("select-button").addEventListener("click", selectRandomNumber);
+        // Agregar el evento al botón de confirmar compra
+        document.getElementById("select-button").addEventListener("click", confirmCompra);
     </script>
 
 </body>
